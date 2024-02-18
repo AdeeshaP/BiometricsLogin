@@ -4,7 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.username});
+
+  final String username;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -60,17 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // appBar: AppBar(
-        //   leading: Image.asset('assets/images/logo.png', width: 80, height: 80),
-        //   backgroundColor: Color.fromARGB(255, 237, 207, 118),
-        //   centerTitle: true,
-        //   title: Text(
-        //     'BioMetric Login',
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.w700,
-        //     ),
-        //   ),
-        // ),
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: double.infinity,
@@ -87,6 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 40,
                 fontWeight: FontWeight.w800,
                 color: Colors.amber[800],
+              ),
+            ),
+            Text(
+              "${widget.username}",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: Colors.amber[900],
               ),
             )
           ]),

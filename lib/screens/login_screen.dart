@@ -21,12 +21,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final String KEY_USERNAME = "KEY_USERNAME";
-  final String KEY_EMAIL = "KEY_EMAIL";
   final String KEY_PASSWORD = "KEY_PASSWORD";
   final String KEY_LOCAL_AUTH_ENABLED = "KEY_LOCAL_AUTH_ENABLED";
   final String REQUIRE_BIOMETRIC_LOGIN_SELECT_YES =
       "REQUIRE_BIOMETRIC_LOGIN_SELECT_YES";
-  bool _validate = false;
   RegExp regex = new RegExp(r'^.{3,}$');
   var localAuth = LocalAuthentication();
   final _secureStorage = const FlutterSecureStorage();
@@ -35,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    sharedPrefrences();
+
     Future.delayed(Duration(seconds: 3), () {
       _readFromStorage();
     });
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           "Biometric authentication is enabled.",
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 16),
         ),
       ));
     } else {
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
         content: Text(
           "Biometric authentication is disabled.",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
       ));
@@ -93,6 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
             await _secureStorage.read(key: KEY_USERNAME) ?? '';
         passwordController.text =
             await _secureStorage.read(key: KEY_PASSWORD) ?? '';
+
+        print("UN" + usernameController.text);
+        print("PW" + passwordController.text);
+        signInSuceessful();
       }
     } else {
       usernameController.text = '';
@@ -104,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -125,7 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                 ),
-                // border: Border.all(color: Colors.black54)),
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: SingleChildScrollView(
                   child: Column(children: [
@@ -161,11 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelStyle:
                               TextStyle(color: Colors.black87, fontSize: 14),
                           prefixIconConstraints: BoxConstraints(minWidth: 40),
-                          prefixIcon: Icon(
-                              color: Colors.grey[700], Icons.person, size: 25),
+                          prefixIcon:
+                              Icon(color: Colors.grey, Icons.person, size: 25),
                           hintText: "Enter the username",
                           hintStyle:
-                              TextStyle(color: Colors.white60, fontSize: 14),
+                              TextStyle(color: Colors.grey, fontSize: 13),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -178,6 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
+                        obscureText: true,
                         controller: passwordController,
                         autofocus: false,
                         onSaved: (value) {
@@ -196,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextStyle(color: Colors.black87, fontSize: 14),
                           prefixIconConstraints: BoxConstraints(minWidth: 40),
                           prefixIcon: Icon(
-                              color: Colors.grey[700],
+                              color: Colors.grey,
                               Icons.password_outlined,
                               size: 25),
                           suffixIcon: IconButton(
@@ -210,85 +215,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           hintText: "Enter the password",
                           hintStyle:
-                              TextStyle(color: Colors.white60, fontSize: 12),
+                              TextStyle(color: Colors.grey, fontSize: 13),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return ("Username is required..");
+                            return ("Password is required..");
                           }
                           return null;
                         },
                       ),
                     ),
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(
-                    //       vertical: 10.0, horizontal: 10.0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //     children: [
-                    //       InkWell(
-                    //         onTap: () {},
-                    //         child: Text(
-                    //           "Forgot Password ?",
-                    //           style:
-                    //               TextStyle(color: Colors.black, fontSize: 15),
-                    //         ),
-                    //       ),
-                    //       SizedBox(width: 5),
-                    //       ElevatedButton(
-                    //         onPressed: () {},
-                    //         child: Text(
-                    //           "Reset",
-                    //           style: TextStyle(
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: 16,
-                    //             color: Colors.white,
-                    //           ),
-                    //         ),
-                    //         style: ButtonStyle(
-                    //             backgroundColor: MaterialStateProperty.all(
-                    //                 Colors.black.withOpacity(0.7)),
-                    //             shape: MaterialStateProperty.all<
-                    //                 RoundedRectangleBorder>(
-                    //               RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(8.0),
-                    //               ),
-                    //             ),
-                    //             fixedSize:
-                    //                 MaterialStateProperty.all(Size(90, 15))),
-                    //       ),
-                    //       SizedBox(width: 3),
-                    //       ElevatedButton(
-                    //         child: Text(
-                    //           "Login",
-                    //           style: TextStyle(
-                    //             fontWeight: FontWeight.bold,
-                    //             color: Colors.white,
-                    //             fontSize: 16,
-                    //           ),
-                    //         ),
-                    //         style: ButtonStyle(
-                    //             backgroundColor: MaterialStateProperty.all(
-                    //                 Colors.black.withOpacity(0.7)),
-                    //             shape: MaterialStateProperty.all<
-                    //                 RoundedRectangleBorder>(
-                    //               RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(8.0),
-                    //               ),
-                    //             ),
-                    //             fixedSize: MaterialStateProperty.all(
-                    //               Size(90, 15),
-                    //             )),
-                    //         onPressed: () {
-                    //           Navigator.of(context).push(
-                    //             MaterialPageRoute(builder: (_) => HomeScreen()),
-                    //           );
-                    //         },
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 20),
@@ -324,13 +260,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               Size(MediaQuery.of(context).size.width, 55),
                             )),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => HomeScreen()),
-                          );
+                          signInSuceessful();
                         },
                       ),
                     ),
-
                     SizedBox(height: 30),
                     Align(
                       alignment: Alignment.center,
@@ -365,5 +298,23 @@ class _LoginScreenState extends State<LoginScreen> {
         ]),
       ),
     ));
+  }
+
+  Future<void> signInSuceessful() async {
+    if (_key.currentState!.validate()) {
+      await _secureStorage.write(
+          key: KEY_USERNAME, value: usernameController.text);
+      await _secureStorage.write(
+          key: KEY_PASSWORD, value: passwordController.text);
+
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(username: usernameController.text),
+          ),
+        );
+      });
+    }
   }
 }
