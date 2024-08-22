@@ -6,13 +6,13 @@ class BiometricBottomSheet extends StatelessWidget {
 
   BiometricBottomSheet({Key? key, required this.action}) : super(key: key);
 
-  // static Color primaryColor = Color(0xFF13B5A2);
-  static Color primaryColor = Colors.amber.withOpacity(0.7);
+  static Color primaryColor =
+      const Color.fromARGB(255, 86, 65, 2).withOpacity(0.7);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       padding: EdgeInsets.symmetric(vertical: 28, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,19 +24,33 @@ class BiometricBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Icon(
-                Icons.key,
-                size: 90,
-                color: primaryColor,
-              ),
-              Icon(
                 Icons.fingerprint_outlined,
                 size: 100,
-                color: primaryColor,
+                color: Color.fromARGB(255, 192, 111, 5).withOpacity(0.7),
               ),
               Icon(
                 MdiIcons.faceRecognition,
                 size: 70,
-                color: primaryColor,
+                color: Color.fromARGB(255, 192, 111, 5).withOpacity(0.7),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0),
+                child: Text(
+                  "Fingerprint",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  "Face ID",
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
             ],
           ),
@@ -45,11 +59,7 @@ class BiometricBottomSheet extends StatelessWidget {
             'Do you want to enable biometric login?',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          SizedBox(height: 5),
-          // Text(
-          //     'The next time you sign in, you won\'t be required for your login credentials.',
-          //     textAlign: TextAlign.center),
-          SizedBox(height: 10),
+          SizedBox(height: 12),
           ElevatedButton(
             child: Text(
               "Yes",
@@ -65,7 +75,8 @@ class BiometricBottomSheet extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              backgroundColor: primaryColor,
+              backgroundColor:
+                  Color.fromARGB(255, 192, 111, 5).withOpacity(0.7),
               textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),

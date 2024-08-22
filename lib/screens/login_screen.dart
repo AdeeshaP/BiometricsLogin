@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   RegExp regex = new RegExp(r'^.{3,}$');
   var localAuth = LocalAuthentication();
   final _secureStorage = const FlutterSecureStorage();
-  late SharedPreferences storage;
 
   @override
   void initState() {
@@ -115,7 +113,6 @@ class _LoginScreenState extends State<LoginScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            // image: AssetImage("assets/images/bg2.PNG"),
             image: AssetImage("assets/images/bg1.jpeg"),
             fit: BoxFit.fill,
           ),
@@ -248,15 +245,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
+                            backgroundColor: WidgetStateProperty.all(
                                 Colors.black.withOpacity(0.7)),
-                            shape: MaterialStateProperty.all<
+                            shape: WidgetStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0),
                               ),
                             ),
-                            minimumSize: MaterialStateProperty.all(
+                            minimumSize: WidgetStateProperty.all(
                               Size(MediaQuery.of(context).size.width, 55),
                             )),
                         onPressed: () {
@@ -302,6 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> signInSuceessful() async {
     if (_key.currentState!.validate()) {
+      // Add backend API integration here
       await _secureStorage.write(
           key: KEY_USERNAME, value: usernameController.text);
       await _secureStorage.write(

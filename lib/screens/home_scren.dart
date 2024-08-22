@@ -1,4 +1,5 @@
 import 'package:biometrics_login_app/components/biometric_bottom_sheet.dart';
+import 'package:biometrics_login_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
@@ -60,35 +61,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/bg1.jpeg"),
-              fit: BoxFit.fill,
-            ),
+    return PopScope(
+      canPop: false,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[400],
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  icon: Icon(Icons.logout, size: 25),
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => LoginScreen(),
+                        ),
+                        (route) => false);
+                  },
+                ),
+              )
+            ],
+            automaticallyImplyLeading: false,
           ),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Welcome",
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w800,
-                color: Colors.amber[800],
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/bg1.jpeg"),
+                fit: BoxFit.fill,
               ),
             ),
-            Text(
-              "${widget.username}",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Colors.amber[900],
+            child: Column(children: [
+              SizedBox(height: 200),
+              Text(
+                "Welcome",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.amber[800],
+                ),
               ),
-            )
-          ]),
+              Text(
+                "${widget.username}",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.amber[900],
+                ),
+              )
+            ]),
+          ),
         ),
       ),
     );
